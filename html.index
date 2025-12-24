@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Деде Мороз Евгеньевич 🎅</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: linear-gradient(135deg, #0a1a2f, #1a3a5f, #2c1a4d);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #f8f4e6;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 2.1rem;
+      font-weight: bold;
+      color: #ffd700;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px rgba(255,215,0,0.6);
+    }
+
+    .subtitle {
+      font-size: 1rem;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .jackpot {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #ffcc00;
+      margin: 12px 0;
+      text-shadow: 0 0 8px rgba(255,204,0,0.7);
+    }
+
+    .stage { display: none; opacity: 0; transition: opacity 0.4s ease; }
+    .stage.active { display: flex; flex-direction: column; align-items: center; opacity: 1; }
+
+    .gift-img {
+      max-width: 100%;
+      height: auto;
+      max-height: 60vh;
+      border-radius: 16px;
+      box-shadow: 0 0 25px rgba(255,215,0,0.4);
+      margin: 20px auto;
+    }
+
+    .btn {
+      background: linear-gradient(to bottom, #e74c3c, #c0392b);
+      color: white;
+      border: none;
+      padding: 16px 40px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+      transition: all 0.3s;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(0,0,0,0.5); }
+    .btn:active { transform: translateY(1px); }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.93);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #1e3799, #4a69bd);
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 90%;
+      box-shadow: 0 0 50px rgba(255,215,0,0.5);
+      text-align: center;
+      animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      80% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      color: #ffd700;
+      margin-bottom: 15px;
+    }
+
+    .modal-prize {
+      font-size: 2.4rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: white;
+      min-height: 2.5em;
+    }
+
+    .modal-counter {
+      font-size: 1.2rem;
+      opacity: 0.85;
+      margin: 12px 0;
+      font-style: italic;
+    }
+
+    .modal-instruction {
+      font-size: 1.05rem;
+      opacity: 0.85;
+      margin: 20px 0;
+      line-height: 1.5;
+    }
+
+    .telegram-btn {
+      background: #0088cc;
+      margin-top: 15px;
+      padding: 12px 35px;
+      font-size: 1.05rem;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      opacity: 0.6;
+    }
+
+    @media (max-width: 480px) {
+      .logo { font-size: 1.7rem; }
+      .jackpot { font-size: 1.1rem; }
+      .modal-prize { font-size: 1.9rem; }
+      .modal-counter { font-size: 1.05rem; }
+      .btn { padding: 14px 30px; font-size: 1.0rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">Деде Мороз Евгеньевич 🎅</div>
+  <div class="subtitle">Нажми на подарок и узнай, что внутри!</div>
+  <div class="jackpot">🔥 Главный приз: $70 000 💰</div>
+
+  <!-- Этап 1: Старт -->
+  <div id="stage1" class="stage active">
+    <img id="startImg" class="gift-img" src="https://i.postimg.cc/tJ5VHwdg/IMG-4415.gif" alt="Подарок">
+  </div>
+
+  <!-- Этап 2: Анимация -->
+  <div id="stage2" class="stage">
+    <img class="gift-img" src="https://i.postimg.cc/2jwq3pvV/IMG-4416.gif" alt="Крутим...">
+  </div>
+
+  <!-- Модальное окно победы -->
+  <div id="resultModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-title">🎁 Получен подарок!</div>
+      <div id="prizeText" class="modal-prize">—</div>
+      <div id="counterText" class="modal-counter">Прокруток: 0</div>
+      <div class="modal-instruction">
+        Сделайте скриншот этого экрана<br>
+        и отправьте Деде Морозу Евгеньевичу в Telegram!
+      </div>
+      <button class="btn telegram-btn" id="telegramBtn">📤 Отправить Деду</button>
+    </div>
+  </div>
+
+  <div class="footer">Дед не врёт. Только иногда шутит.</div>
+
+  <script>
+    // Обновлённый список призов — + билеты
+    const prizes = [
+      'Правый носок 🧦',
+      'Левый носок 🧦',
+      'Колода карт 🃏',
+      'Кружка ☕',
+      'Шоколадка 🍫',
+      'Пара носков 🧦🧦',
+      'Новогодний брелок 🎄',
+      'Монетка «Нахуй/Похуй» 🪙',
+      '3 апельсина 🍊🍊🍊',
+      '3 мандарина 🍊🍊🍊',
+      '1 лотерейный билет 🎫',
+      '2 лотерейных билета 🎫🎫',
+      '3 лотерейных билета 🎫🎫🎫'
+    ];
+
+    const stage1 = document.getElementById('stage1');
+    const stage2 = document.getElementById('stage2');
+    const resultModal = document.getElementById('resultModal');
+    const prizeText = document.getElementById('prizeText');
+    const counterText = document.getElementById('counterText');
+    const telegramBtn = document.getElementById('telegramBtn');
+
+    let clickCount = 0; // Счётчик НАЖАТИЙ (не "прокруток")
+
+    document.getElementById('startImg').addEventListener('click', () => {
+      clickCount++;
+      stage1.classList.remove('active');
+      stage2.classList.add('active');
+
+      setTimeout(() => {
+        stage2.classList.remove('active');
+        const prize = prizes[Math.floor(Math.random() * prizes.length)];
+        prizeText.textContent = prize;
+        counterText.textContent = `Прокруток: ${clickCount}`;
+        resultModal.classList.add('active');
+      }, 7500);
+    });
+
+    telegramBtn.addEventListener('click', () => {
+      const msg = `🎅 Деде Мороз Евгеньевич!\nМне выпало:\n${prizeText.textContent}\nПрокруток: ${clickCount} 🎡\nСкрин прилагаю.`;
+      const encoded = encodeURIComponent(msg);
+      const intent = `tg://msg?text=${encoded}`;
+      const webUrl = `https://t.me/share/url?text=${encoded}`;
+
+      window.location.href = intent;
+      setTimeout(() => {
+        if (!document.hidden) {
+          window.open(webUrl, '_blank', 'noopener,noreferrer');
+        }
+      }, 1200);
+    });
+
+    resultModal.addEventListener('click', (e) => {
+      if (e.target === resultModal) {
+        resultModal.classList.remove('active');
+        stage1.classList.add('active');
+      }
+    });
+  </script>
+</body>
+</html>
